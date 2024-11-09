@@ -12,18 +12,12 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import AnimatedInput from "@/components/AnimatedInput";
+import AuthPage from "./auth";
 
 export default function LandingPage() {
   const scrollY = useSharedValue(0);
   const ref = useRef<Animated.ScrollView>(null);
-  useEffect(() => {
-    setTimeout(() => {
-      if (scrollY.value === 0) {
-        scrollY.value = height;
-        ref.current?.scrollTo({ y: height, animated: true });
-      }
-    }, 3000);
-  }, []);
   const handleScroll = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y;
   });
@@ -53,16 +47,28 @@ export default function LandingPage() {
 
   const headerAnimatedStyles = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollY.value, [0, height], [0, 1]),
+      opacity: interpolate(
+        scrollY.value,
+        [0, height / 2],
+        [0, 1],
+        Extrapolation.CLAMP
+      ),
     };
   });
   return (
-    <Animated.View entering={FadeIn} style={{ flex: 1, backgroundColor:"black" }}>
+    <Animated.View
+      entering={FadeIn}
+      style={{ flex: 1, backgroundColor: "black" }}
+    >
       <Animated.View style={[styles.header, headerAnimatedStyles]}>
-        <Text style={{ fontSize: 24, color: "white" }}>App Name</Text>
+        <Text style={{ fontSize: 28, color: "white", fontWeight: 700 }}>
+          ConnectEd
+        </Text>
       </Animated.View>
       <Animated.ScrollView
         ref={ref}
+        pagingEnabled
+        showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         style={{ flex: 1, backgroundColor: "black" }}
       >
@@ -79,14 +85,26 @@ export default function LandingPage() {
           </View>
           <View style={styles.contentContainer}>
             <Animated.Text style={[titleAnimatedStyle, styles.title]}>
-              App Name
+              ConnectEd
             </Animated.Text>
             <Text style={[styles.subtitle, { marginTop: "4%" }]}>
-              Live Texting And Video Chats
+              Collaborate, Create, Achieve Together
             </Text>
           </View>
+          <View>
+            <AnimatedButton
+              onPress={() => {
+                scrollY.value = height;
+                ref.current?.scrollTo({ y: height, animated: true });
+              }}
+              title="Explore"
+              style={{ width: width * 0.5, marginTop: "4%" }}
+            />
+          </View>
         </View>
-        <View style={{ height, width }}></View>
+        <View style={styles.authContainer}>
+          <AuthPage />
+        </View>
       </Animated.ScrollView>
     </Animated.View>
   );
@@ -125,11 +143,16 @@ const styles = StyleSheet.create({
   header: {
     width,
     height: 100,
+    // backgroundColor: "black",
     justifyContent: "flex-end",
     paddingBottom: "4%",
     alignItems: "center",
     position: "absolute",
     top: 0,
     zIndex: 100,
+  },
+  authContainer: {
+    height,
+    width,
   },
 });

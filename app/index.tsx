@@ -1,8 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Stack } from "expo-router";
+import { useAuthStore } from "@/hooks/useAuth";
 
 export default function index() {
-  return <Redirect href="/landing" />;
+  const { token } = useAuthStore();
+  return token === null ? (
+    <Redirect href="/landing" />
+  ) : (
+    <Redirect href="/user/home" />
+  );
 }
-

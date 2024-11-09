@@ -28,7 +28,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-video"
+      "expo-video",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow TrekTrip to use your location. The location will be used to find destinations nearby your location."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

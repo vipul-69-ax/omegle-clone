@@ -19,12 +19,14 @@ type ButtonProps = {
   style?: ViewStyle;
   title: string;
   titleStyle?: TextStyle;
+  onPress?: () => void;
 };
 
 export default function AnimatedButton({
   style,
   title,
   titleStyle,
+  onPress
 }: ButtonProps) {
   const buttonScale = useSharedValue(1);
   const scaleStyles = useAnimatedStyle(() => {
@@ -38,16 +40,15 @@ export default function AnimatedButton({
   });
   const tapGesture = Gesture.Tap()
     .onBegin((i) => {
-
-        buttonScale.value = withTiming(0.9)
+      buttonScale.value = withTiming(0.9);
     })
     .onFinalize((i) => {
-        buttonScale.value = withTiming(1)
+      buttonScale.value = withTiming(1);
     });
   return (
     <GestureDetector gesture={tapGesture}>
       <Animated.View style={scaleStyles}>
-        <Pressable style={[styles.button, style]}>
+        <Pressable onPress={onPress} style={[styles.button, style]}>
           <Text style={[styles.title, titleStyle]}>{title}</Text>
         </Pressable>
       </Animated.View>
@@ -57,7 +58,7 @@ export default function AnimatedButton({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "pink",
+    backgroundColor: "#007AFF",
     width: width * 0.7,
     alignSelf: "center",
     padding: "4%",
@@ -66,7 +67,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   title: {
-    fontSize: 16,
-    color: "#222",
+    fontSize: 18,
+    color: "white",
+    fontWeight:"bold"
   },
 });
